@@ -4,4 +4,4 @@
 To implement real-time ray-tracing inside OpenGL by making use of the nVidia API, OptiX.
 
 ## Scope
-The extend to which the ray-tracing algorithm should be implemented for global illumination.
+The extend to which the ray-tracing algorithm should be implemented represents the area of global illumination.
