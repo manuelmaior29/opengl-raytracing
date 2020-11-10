@@ -10,6 +10,10 @@
 #include "Shader.h"
 #include "stb_image.h"
 #include <filesystem>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+#include "Model3D.hpp"
 
 using namespace std;
 
@@ -18,6 +22,7 @@ namespace Graphics
 	class Game
 	{
 	private:
+		Model3D model;
 		GLFWwindow* window;
 		Shader shader;
 		string windowName;
@@ -28,18 +33,21 @@ namespace Graphics
 		int glMajor;
 		int glMinor;
 
+		/*
 		//temp usage
 		unsigned int VBO;
 		unsigned int VAO;
 		unsigned int EBO;
 		unsigned int texture1;
 		unsigned int texture2;
+		*/
 
 		// Initialization methods
 		void initGlfw();
 		int initWindow();
 		void initViewport();
 		int initGlad();
+		void initGLState();
 		void initObjects();
 
 	public:
