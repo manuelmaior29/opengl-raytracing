@@ -47,7 +47,6 @@ namespace Graphics {
 		if (VERBOSE)
 			std::cout << "Loading " << fileName << "...";
 		*/
-
 		Assimp::Importer import;
 		const aiScene *scene = import.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
@@ -73,7 +72,6 @@ namespace Graphics {
 			aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
 			meshes.push_back(processMesh(mesh, scene));
 		}
-
 		//process children (if any)
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 			processNode(node->mChildren[i], scene);
@@ -85,6 +83,7 @@ namespace Graphics {
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		std::vector<Texture> textures;
+		std::cout << "MESHES:" << meshes.size();
 
 		// Walk through each of the mesh's vertices
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)

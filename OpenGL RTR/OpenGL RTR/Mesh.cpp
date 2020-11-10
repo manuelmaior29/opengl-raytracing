@@ -31,7 +31,6 @@ namespace Graphics {
 		unsigned int normalNr = 1;
 		unsigned int heightNr = 1;
 		unsigned int opacityNr = 1;
-
 		shader.use();
 
 		//set textures
@@ -58,6 +57,7 @@ namespace Graphics {
 			glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		}
 
+		std::cout << "here";
 		glBindVertexArray(this->buffers.VAO);
 		glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);

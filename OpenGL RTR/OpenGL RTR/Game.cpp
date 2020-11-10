@@ -1,15 +1,12 @@
 #include "Game.h"
 
-// Class non-members
-// Callback function for window resizing
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
 namespace Graphics
 {
-	// Class members
+	static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+	{
+		glViewport(0, 0, width, height);
+	}
+
 	Game::Game(string windowName, 
 			   int windowWidth, 
 			   int windowHeight, 
@@ -27,6 +24,8 @@ namespace Graphics
 		this->viewportHeight = viewportHeight;
 		this->glMajor = glMajor;
 		this->glMinor = glMinor;
+		this->lastX = viewportHeight / 2;
+		this->lastY = viewportWidth / 2;
 
 		this->initGlfw();
 		this->initWindow();
@@ -34,8 +33,8 @@ namespace Graphics
 		this->initViewport();
 		this->initGLState();
 		this->initObjects();
+		this->initCamera();
 	
-		this->model.Load3DModel("Models/SimpleCrate/SimpleCrate.obj", "Models/SimpleCrate/");
 		this->shader.loadShader(vShaderPath, fShaderPath);
 
 	}
@@ -43,6 +42,49 @@ namespace Graphics
 	Game::~Game()
 	{
 		glfwTerminate();
+	}
+
+	// Private methods
+	void Game::processMouseInput()
+	{
+		double xpos, ypos;
+
+		glfwGetCursorPos(this->window, &xpos, &ypos);
+
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos;
+
+		lastX = xpos;
+		lastY = ypos;
+
+		// TODO: Customizable sensitivity (optional)
+		const float sensitivity = 0.1f;
+		xoffset *= sensitivity;
+		yoffset *= sensitivity;
+
+		this->camera.rotate(xoffset, yoffset);
+	}
+
+	void Game::processKeyboardInput()
+	{
+		float currentFrameTime = glfwGetTime();
+		this->deltaTime = (currentFrameTime - this->lastFrameTime);
+		this->lastFrameTime = currentFrameTime;
+
+		if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(this->window, true);
+
+		if (glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS)
+			this->camera.move(MOVE_FORWARD, this->deltaTime);
+
+		if (glfwGetKey(this->window, GLFW_KEY_S) == GLFW_PRESS)
+			this->camera.move(MOVE_BACKWARD, this->deltaTime);
+
+		if (glfwGetKey(this->window, GLFW_KEY_A) == GLFW_PRESS)
+			this->camera.move(MOVE_LEFT, this->deltaTime);
+
+		if (glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS)
+			this->camera.move(MOVE_RIGHT, this->deltaTime);
 	}
 
 	// State checker methods
@@ -71,7 +113,9 @@ namespace Graphics
 			glfwTerminate();
 			return -1;
 		}
+
 		glfwMakeContextCurrent(this->window);
+		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
 
 		return 1;
 	}
@@ -80,7 +124,6 @@ namespace Graphics
 	{
 		glViewport(0, 0, this->viewportWidth, this->viewportHeight);
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
 	}
 
 	int Game::initGlad()
@@ -103,106 +146,32 @@ namespace Graphics
 
 	void Game::initObjects()
 	{
-		/*
-		float vertices[] = {
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		Model3D* model = new Model3D();
 
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-		};
-
-		std::cout << sizeof(vertices);
-
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-
-		glBindVertexArray(VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
-
-		// Position attributes
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(1);
-
-		// Textures
-
-		glGenTextures(1, &texture1);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		// set the texture wrapping parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		// set texture filtering parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		int width, height, nrChannels;
-		stbi_set_flip_vertically_on_load(true);
-		unsigned char* data2 = stbi_load("Textures/download.jpg", &width, &height, &nrChannels, 0);
-
-		if (data2)
+		for (int i = 0; i < 50; i++)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data2);
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-		else
-		{
-			std::cout << "ERROR::FAILED_TO_LOAD_TEXTURE" << std::endl;
+			Model3D* model = new Model3D();
+			models.push_back(*model);
 		}
 
-		stbi_image_free(data2);
-
-		this->shader.use();
-		this->shader.setInt("texture1", 0);
-		*/
-
+		models.at(0).Load3DModel("Models/Sphere/Sphere.obj", "Models/Sphere");
+		models.at(1).Load3DModel("Models/Plane/Plane.obj", "Models/Plane");
+		
 	}
 
-	// 
+	void Game::initCamera()
+	{
+		// TODO: Support for custom initial state (optional)
+		this->camera.loadCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 2.5f);
+
+		this->lastFrameTime = 0.0f;
+		this->deltaTime = 0.0f;
+	}
+
 	void Game::processInput()
 	{
-		if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-			glfwSetWindowShouldClose(this->window, true);
+		this->processMouseInput();
+		this->processKeyboardInput();
 	}
 
 	void Game::render()
@@ -213,20 +182,23 @@ namespace Graphics
 
 		// Model matrix
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-		model = glm::rotate(model, glm::radians(100* (float)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		this->shader.setMatrix("model", model);
 
 		// View matrix
 		glm::mat4 view = glm::mat4(1.0f);
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, 10.0f));
+		view = this->camera.getViewMatrix();
 		this->shader.setMatrix("view", view);
 
 		// Projection matrix
-		glm::mat4 projection = glm::perspective(glm::radians(90.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(85.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
 		this->shader.setMatrix("projection", projection);
 
-		this->model.Draw(this->shader);
+		int modelsSize = this->models.size();
+		for (int i = 0; i < modelsSize; i++)
+		{
+			models.at(i).Draw(this->shader);
+		}
 
 		// Swap front buffer with back buffer
 		glfwSwapBuffers(window);

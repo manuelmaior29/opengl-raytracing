@@ -17,5 +17,5 @@ void main()
 
     fTexCoords = aTexCoords;
 
-    gl_Position = projection * model * vec4(aPos, 1.0);
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
 }
