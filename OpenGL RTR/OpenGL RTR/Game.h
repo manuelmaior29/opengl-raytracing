@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+#include <gtc/matrix_inverse.hpp>
 #include <gtc/type_ptr.hpp>
 #include <deque>
 
@@ -25,15 +26,17 @@ namespace Graphics
 	class Game
 	{
 	private:
-		static Game* game;
-		
-		// Singleton object
 
-		// TODO: Extend to multiple models
 		std::vector<Model3D> models;
+
+		// TODO: To create a Light (class|structure)
+		glm::vec3 lightPos;
+		glm::vec3 lightColor;
 
 		Camera camera;
 		GLFWwindow* window;
+
+		// TODO: Create init method for shaders (possibly add vector of shaders)
 		Shader shader;
 		string windowName;
 		int windowWidth;
@@ -54,6 +57,7 @@ namespace Graphics
 		void initViewport();
 		int initGlad();
 		void initGLState();
+		void initLights();
 		void initObjects();
 		void initCamera();
 

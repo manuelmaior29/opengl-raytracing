@@ -32,10 +32,12 @@ namespace Graphics
 		this->initGlad();
 		this->initViewport();
 		this->initGLState();
+		this->shader.loadShader(vShaderPath, fShaderPath);
+		
+		this->initLights();
 		this->initObjects();
 		this->initCamera();
 	
-		this->shader.loadShader(vShaderPath, fShaderPath);
 
 	}
 
@@ -144,6 +146,16 @@ namespace Graphics
 		glClearColor(0.95f, 0.85f, 0.55f, 0.0f);
 	}
 
+	void Game::initLights()
+	{
+		this->lightPos = glm::vec3(10.0f, 10.0f, 0.0f);
+		this->lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+		
+		this->shader.use();
+		this->shader.setVec("lightPos", this->lightPos);
+		this->shader.setVec("lightColor", lightColor);
+	}
+
 	void Game::initObjects()
 	{
 		Model3D* model = new Model3D();
@@ -162,7 +174,8 @@ namespace Graphics
 	void Game::initCamera()
 	{
 		// TODO: Support for custom initial state (optional)
-		this->camera.loadCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 2.5f);
+		glm::vec3 cameraPos = glm::vec3(10.0f, 0.0f, 0.0f);
+		this->camera.loadCamera(cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), 2.5f);
 
 		this->lastFrameTime = 0.0f;
 		this->deltaTime = 0.0f;
@@ -182,8 +195,13 @@ namespace Graphics
 
 		// Model matrix
 		glm::mat4 model = glm::mat4(1.0f);
+		// TODO: Different model matrix for each object
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		this->shader.setMatrix("model", model);
+
+		// Normal matrix
+		glm::mat3 normalModel = glm::mat3(glm::inverseTranspose(model));
+		this->shader.setMatrix("normalModel", normalModel);
 
 		// View matrix
 		glm::mat4 view = glm::mat4(1.0f);
@@ -191,8 +209,13 @@ namespace Graphics
 		this->shader.setMatrix("view", view);
 
 		// Projection matrix
-		glm::mat4 projection = glm::perspective(glm::radians(85.0f), 800.0f / 600.0f, 0.1f, 1000.0f);
+		glfwGetFramebufferSize(this->window, &this->viewportWidth, &this->viewportHeight);
+
+		glm::mat4 projection = glm::perspective(glm::radians(85.0f), (float) this->viewportWidth / this->viewportHeight, 0.1f, 1000.0f);
 		this->shader.setMatrix("projection", projection);
+
+		// Update camera pos
+		this->shader.setVec("viewPos", this->camera.getCameraPosition());
 
 		int modelsSize = this->models.size();
 		for (int i = 0; i < modelsSize; i++)

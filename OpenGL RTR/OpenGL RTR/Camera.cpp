@@ -33,6 +33,11 @@ namespace Graphics {
         this->cameraDirection = glm::normalize(cameraTarget - cameraPosition);
         this->cameraRightDirection = glm::normalize(glm::cross(this->cameraDirection, glm::vec3(0.0f, 1.0f, 0.0f)));
     }
+
+    glm::vec3 Camera::getCameraPosition()
+    {
+        return this->cameraPosition;
+    }
     
     glm::mat4 Camera::getViewMatrix()
     {

@@ -185,7 +185,17 @@ namespace Graphics
 		glUniform1f(glGetUniformLocation(this->ID, name.c_str()), value);
 	}
 
+	void Shader::setVec(const std::string& name, glm::vec3 value) const
+	{
+		glUniform3fv(glGetUniformLocation(this->ID, name.c_str()), 1, glm::value_ptr(value));
+	}
+
 	void Shader::setMatrix(const std::string& name, glm::mat4 value) const
+	{
+		glUniformMatrix4fv(glGetUniformLocation(this->ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	void Shader::setMatrix(const std::string& name, glm::mat3 value) const
 	{
 		glUniformMatrix4fv(glGetUniformLocation(this->ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 	}
