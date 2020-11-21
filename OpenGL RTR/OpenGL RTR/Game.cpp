@@ -37,8 +37,6 @@ namespace Graphics
 		this->initLights();
 		this->initObjects();
 		this->initCamera();
-	
-
 	}
 
 	Game::~Game()
@@ -150,10 +148,44 @@ namespace Graphics
 	{
 		this->lightPos = glm::vec3(10.0f, 10.0f, 0.0f);
 		this->lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-		
+
+		// Initialization of the directional light
+		this->directionalLight = 
+		{
+			glm::normalize(glm::vec3(0.0f, -1.0f, -1.0f)),
+			glm::vec3(1.0f, 1.0f, 1.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f)
+		};
+
 		this->shader.use();
-		this->shader.setVec("lightPos", this->lightPos);
-		this->shader.setVec("lightColor", lightColor);
+
+		this->shader.setVec("directionalLight.direction", this->directionalLight.direction);
+		this->shader.setVec("directionalLight.color", this->directionalLight.color);
+		this->shader.setVec("directionalLight.ambient", this->directionalLight.ambient);
+		this->shader.setVec("directionalLight.diffuse", this->directionalLight.diffuse);
+		this->shader.setVec("directionalLight.specular", this->directionalLight.specular);
+		
+		// Initialization of point lights
+		this->pointLights.push_back
+		({
+			glm::vec3(glm::vec3(0.0f, 5.0f, 0.0f)),
+			glm::vec3(1.0f, 1.0f, 1.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			1.0f,
+			0.14,
+			0.07
+		});	
+
+		//TODO: Iterate through all point light sources
+
+		/*
+		this->shader.setVec("lightPos", glm::vec3(1, 1, 1));
+		this->shader.setVec("lightColor", glm::vec3(1, 1, 1));
+		*/
 	}
 
 	void Game::initObjects()
@@ -167,7 +199,7 @@ namespace Graphics
 		}
 
 		models.at(0).Load3DModel("Models/Sphere/Sphere.obj", "Models/Sphere");
-		models.at(1).Load3DModel("Models/Plane/Plane.obj", "Models/Plane");
+		models.at(1).Load3DModel("Models/Room/Room.obj", "Models/Room");
 		
 	}
 

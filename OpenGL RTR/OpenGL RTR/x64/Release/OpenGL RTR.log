@@ -1,16 +1,16 @@
 ﻿  Game.cpp
   The contents of <filesystem> are available only with C++17 or later.
-C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\OpenGL RTR\Game.cpp(27,32): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\OpenGL RTR\Game.cpp(28,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\OpenGL RTR\Game.cpp(56,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\OpenGL RTR\Game.cpp(57,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\OpenGL RTR\Game.cpp(59,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\OpenGL RTR\Game.cpp(60,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\OpenGL RTR\Game.cpp(72,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\OpenGL RTR\Game.cpp(221,39): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(27,32): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(28,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(54,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(55,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(57,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(58,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(70,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(243,39): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Generating code
-  2 of 832 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  2 of 844 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    8 functions had inline decision re-evaluated but remain unchanged
+    10 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  OpenGL RTR.vcxproj -> C:\Users\hoGGo\Graphics\Bachelor Degree\bachelor-degree\OpenGL RTR\x64\Release\OpenGL RTR.exe
+  OpenGL RTR.vcxproj -> C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\x64\Release\OpenGL RTR.exe

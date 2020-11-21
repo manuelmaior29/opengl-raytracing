@@ -23,6 +23,27 @@ using namespace std;
 
 namespace Graphics
 {
+	typedef struct PointLight_
+	{
+		glm::vec3 position;
+		glm::vec3 color;
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+		float constant;
+		float linear;
+		float quadratic;
+	} PointLight;
+
+	typedef struct DirectionalLight_
+	{
+		glm::vec3 direction;
+		glm::vec3 color;
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+	} DirectionalLight;
+
 	class Game
 	{
 	private:
@@ -30,6 +51,9 @@ namespace Graphics
 		std::vector<Model3D> models;
 
 		// TODO: To create a Light (class|structure)
+		DirectionalLight directionalLight;
+		std::vector<PointLight> pointLights;
+
 		glm::vec3 lightPos;
 		glm::vec3 lightColor;
 
