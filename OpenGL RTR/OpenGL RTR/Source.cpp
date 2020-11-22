@@ -28,8 +28,8 @@ int main()
 
 	while (!game.windowShouldClose())
 	{
-		game.processInput();
 		game.render();
+		game.processInput();
 		glfwPollEvents();
 	}
 

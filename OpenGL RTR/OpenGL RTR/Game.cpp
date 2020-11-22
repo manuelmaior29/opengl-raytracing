@@ -27,6 +27,9 @@ namespace Graphics
 		this->lastX = viewportHeight / 2;
 		this->lastY = viewportWidth / 2;
 
+		// TODO: Game state initialization method
+		this->firstMouse = true;
+
 		this->initGlfw();
 		this->initWindow();
 		this->initGlad();
@@ -50,6 +53,13 @@ namespace Graphics
 		double xpos, ypos;
 
 		glfwGetCursorPos(this->window, &xpos, &ypos);
+
+		if (this->firstMouse)
+		{
+			lastX = xpos;
+			lastY = ypos;
+			this->firstMouse = false;
+		}
 
 		float xoffset = xpos - lastX;
 		float yoffset = lastY - ypos;
@@ -85,6 +95,16 @@ namespace Graphics
 
 		if (glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS)
 			this->camera.move(MOVE_RIGHT, this->deltaTime);
+	}
+
+	void Game::processTimePassing()
+	{
+		std::cout << "Time passed\n";
+		/*
+		this->pointLights[0].position.y = 20 * sin(glfwGetTime());
+		this->shader.use();
+		this->shader.setVec("pointLight.position", this->pointLights[0].position);
+		*/
 	}
 
 	// State checker methods
@@ -146,9 +166,6 @@ namespace Graphics
 
 	void Game::initLights()
 	{
-		this->lightPos = glm::vec3(10.0f, 10.0f, 0.0f);
-		this->lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-
 		// Initialization of the directional light
 		this->directionalLight = 
 		{
@@ -170,15 +187,25 @@ namespace Graphics
 		// Initialization of point lights
 		this->pointLights.push_back
 		({
-			glm::vec3(glm::vec3(0.0f, 5.0f, 0.0f)),
+			glm::vec3(glm::vec3(0.0f, 4.0f, 0.0f)),
 			glm::vec3(1.0f, 1.0f, 1.0f),
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			1.0f,
-			0.14,
-			0.07
+			0.027,
+			0.0028
 		});	
+
+		this->shader.use();
+		this->shader.setVec("pointLight.position", this->pointLights[0].position);
+		this->shader.setVec("pointLight.color", this->pointLights[0].color);
+		this->shader.setVec("pointLight.ambient", this->pointLights[0].ambient);
+		this->shader.setVec("pointLight.diffuse", this->pointLights[0].diffuse);
+		this->shader.setVec("pointLight.specular", this->pointLights[0].specular);
+		this->shader.setFloat("pointLight.constant", this->pointLights[0].constant);
+		this->shader.setFloat("pointLight.linear", this->pointLights[0].linear);
+		this->shader.setFloat("pointLight.quadratic", this->pointLights[0].quadratic);
 
 		//TODO: Iterate through all point light sources
 
@@ -200,14 +227,13 @@ namespace Graphics
 
 		models.at(0).Load3DModel("Models/Sphere/Sphere.obj", "Models/Sphere");
 		models.at(1).Load3DModel("Models/Room/Room.obj", "Models/Room");
-		
 	}
 
 	void Game::initCamera()
 	{
 		// TODO: Support for custom initial state (optional)
-		glm::vec3 cameraPos = glm::vec3(10.0f, 0.0f, 0.0f);
-		this->camera.loadCamera(cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), 2.5f);
+		glm::vec3 cameraPos = glm::vec3(5.2f, 2.5f, -4.1f);
+		this->camera.loadCamera(cameraPos, glm::vec3(10.0f, 0.0f, 1.0f), 4.5f);
 
 		this->lastFrameTime = 0.0f;
 		this->deltaTime = 0.0f;
@@ -215,8 +241,11 @@ namespace Graphics
 
 	void Game::processInput()
 	{
+		std::cout << "Position: " << this->camera.getCameraPosition().x << " " << this->camera.getCameraPosition().y << " " << this->camera.getCameraPosition().z;
+		std::cout << "Direction: " << this->camera.getCameraDirection().x << " " << this->camera.getCameraDirection().y << " " << this->camera.getCameraDirection().z;
 		this->processMouseInput();
 		this->processKeyboardInput();
+		this->processTimePassing();
 	}
 
 	void Game::render()

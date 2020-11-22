@@ -51,7 +51,6 @@ namespace Graphics {
 			else if (name == "texture_opacity")
 				number = std::to_string(opacityNr++);
 			// now set the sampler to the correct texture unit
-			std::cout << name << number << std::endl;
 			glUniform1i(glGetUniformLocation(shader.get(), (name + number).c_str()), i);
 			// and finally bind the texture
 			glBindTexture(GL_TEXTURE_2D, textures[i].id);

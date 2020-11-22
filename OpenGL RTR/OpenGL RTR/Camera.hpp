@@ -25,6 +25,7 @@ namespace Graphics {
 
         glm::mat4 getViewMatrix();
 		glm::vec3 getCameraTarget();
+        glm::vec3 getCameraDirection();
         glm::vec3 getCameraPosition();
 		void move(MOVE_DIRECTION direction, float deltaTime);
         void rotate(float pitch, float yaw);		

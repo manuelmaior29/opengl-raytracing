@@ -36,23 +36,17 @@ uniform sampler2D texture_diffuse1;
 
 uniform vec3 viewPos;
 
-/*
-uniform vec3 lightPos;
-uniform vec3 lightColor;
-*/
-
 // Shading variables
 float ambientStrength = 0.1f;
 float specularStrength = 0.5f;
 
-void main()
+vec4 shadeDirectionalLight()
 {
     // Ambient shading component
     vec3 ambient = ambientStrength * texture(texture_diffuse1, fTexCoords).rgb * directionalLight.color;
 
     // Diffuse shading component
     vec3 normal = normalize(fNormal);
-    vec3 lightDir = normalize(lightPos - fFragPos);
     vec3 diffuse = max(dot(normal, directionalLight.direction), 0.0f) * texture(texture_diffuse1, fTexCoords).rgb * directionalLight.color;
 
     // Specular shading component
@@ -60,7 +54,35 @@ void main()
     vec3 reflectDir = reflect(-directionalLight.direction, normal);
     vec3 specular = pow(max(dot(viewDir, reflectDir), 0.0f), 32) * specularStrength * directionalLight.color;
 
-    vec4 color = vec4(ambient + diffuse + specular, 1);
+    return vec4(ambient + diffuse + specular, 1.0f);
+}
 
-    fFragColor = color; //texture(texture_diffuse1, fTexCoords);
+vec4 shadePointLights()
+{
+    // Ambient shading component
+    vec3 ambient = ambientStrength * texture(texture_diffuse1, fTexCoords).rgb * pointLight.color;
+
+    // Diffuse shading component
+    vec3 normal = normalize(fNormal);
+    vec3 lightDir = normalize(pointLight.position - fFragPos);
+    vec3 diffuse = max(dot(normal, lightDir), 0.0f) * texture(texture_diffuse1, fTexCoords).rgb * pointLight.color;
+
+    // Specular shading component
+    vec3 viewDir = normalize(viewPos - fFragPos);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    vec3 specular = pow(max(dot(viewDir, reflectDir), 0.0f), 64) * specularStrength * pointLight.color;
+
+    float distance = length(pointLight.position - fFragPos);
+    float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));
+
+    return vec4(ambient * attenuation + diffuse * attenuation + specular * 0.5 * attenuation, 1.0f);
+}
+
+void main()
+{
+
+    vec4 directionalColor = shadeDirectionalLight();
+    vec4 pointColor = shadePointLights();
+
+    fFragColor = pointColor; //texture(texture_diffuse1, fTexCoords);
 }

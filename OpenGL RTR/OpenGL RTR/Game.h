@@ -50,7 +50,6 @@ namespace Graphics
 
 		std::vector<Model3D> models;
 
-		// TODO: To create a Light (class|structure)
 		DirectionalLight directionalLight;
 		std::vector<PointLight> pointLights;
 
@@ -70,9 +69,10 @@ namespace Graphics
 		int glMajor;
 		int glMinor;
 
+		// State members
+		bool firstMouse;
 		float lastFrameTime;
 		float deltaTime;
-
 		float lastX;
 		float lastY;
 
@@ -85,6 +85,7 @@ namespace Graphics
 		void initObjects();
 		void initCamera();
 
+		void processTimePassing();
 		void processMouseInput();
 		void processKeyboardInput();
 

@@ -38,6 +38,11 @@ namespace Graphics {
     {
         return this->cameraPosition;
     }
+
+    glm::vec3 Camera::getCameraDirection()
+    {
+        return this->cameraDirection;
+    }
     
     glm::mat4 Camera::getViewMatrix()
     {
