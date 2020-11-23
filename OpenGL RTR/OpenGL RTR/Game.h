@@ -23,6 +23,22 @@ using namespace std;
 
 namespace Graphics
 {
+
+	enum SHADER_TYPE { STANDARD_SHADER, LIGHTSOURCE_SHADER };
+
+	// Model structs
+	typedef struct Object3D_
+	{
+		Model3D model;
+		glm::vec3 position;
+		glm::vec3 rotation;
+		glm::vec3 rotationAxis;
+		glm::vec3 scale;
+		SHADER_TYPE usedShader;
+		std::string path;
+	} Object3D;
+
+	// Light structs
 	typedef struct PointLight_
 	{
 		glm::vec3 position;
@@ -48,19 +64,17 @@ namespace Graphics
 	{
 	private:
 
+		std::vector<Object3D> objects;
 		std::vector<Model3D> models;
 
 		DirectionalLight directionalLight;
 		std::vector<PointLight> pointLights;
 
-		glm::vec3 lightPos;
-		glm::vec3 lightColor;
-
 		Camera camera;
 		GLFWwindow* window;
 
 		// TODO: Create init method for shaders (possibly add vector of shaders)
-		Shader shader;
+		std::vector<Shader> shaders;
 		string windowName;
 		int windowWidth;
 		int windowHeight;
@@ -81,6 +95,7 @@ namespace Graphics
 		void initViewport();
 		int initGlad();
 		void initGLState();
+		void initShaders();
 		void initLights();
 		void initObjects();
 		void initCamera();
@@ -97,9 +112,7 @@ namespace Graphics
 			int viewportWidth,
 			int viewportHeight,
 			int glMajor,
-			int glMinor,
-			const char* vShaderPath,
-			const char* fShaderPath);
+			int glMinor);
 
 		Game(const Game&) = delete;
 

@@ -13,9 +13,7 @@ namespace Graphics
 			   int viewportWidth, 
 		       int viewportHeight, 
 			   int glMajor, 
-			   int glMinor,
-			   const char* vShaderPath,
-			   const char* fShaderPath)
+			   int glMinor)
 	{
 		this->windowName = windowName;
 		this->windowWidth = windowWidth;
@@ -35,7 +33,7 @@ namespace Graphics
 		this->initGlad();
 		this->initViewport();
 		this->initGLState();
-		this->shader.loadShader(vShaderPath, fShaderPath);
+		this->initShaders();
 		
 		this->initLights();
 		this->initObjects();
@@ -164,6 +162,17 @@ namespace Graphics
 		glClearColor(0.95f, 0.85f, 0.55f, 0.0f);
 	}
 
+	void Game::initShaders()
+	{
+		Shader* standardShader = new Shader();
+		standardShader->loadShader("./Shaders/standard_vs.vert", "./Shaders/standard_fs.frag");
+		this->shaders.push_back(*standardShader);
+
+		Shader* lightsourceShader = new Shader();
+		lightsourceShader->loadShader("./Shaders/lightsource_vs.vert", "./Shaders/lighsource_fs.frag");
+		this->shaders.push_back(*lightsourceShader);
+	}
+
 	void Game::initLights()
 	{
 		// Initialization of the directional light
@@ -176,13 +185,13 @@ namespace Graphics
 			glm::vec3(0.0f, 0.0f, 0.0f)
 		};
 
-		this->shader.use();
+		this->shaders[STANDARD_SHADER].use();
 
-		this->shader.setVec("directionalLight.direction", this->directionalLight.direction);
-		this->shader.setVec("directionalLight.color", this->directionalLight.color);
-		this->shader.setVec("directionalLight.ambient", this->directionalLight.ambient);
-		this->shader.setVec("directionalLight.diffuse", this->directionalLight.diffuse);
-		this->shader.setVec("directionalLight.specular", this->directionalLight.specular);
+		this->shaders[STANDARD_SHADER].setVec("directionalLight.direction", this->directionalLight.direction);
+		this->shaders[STANDARD_SHADER].setVec("directionalLight.color", this->directionalLight.color);
+		this->shaders[STANDARD_SHADER].setVec("directionalLight.ambient", this->directionalLight.ambient);
+		this->shaders[STANDARD_SHADER].setVec("directionalLight.diffuse", this->directionalLight.diffuse);
+		this->shaders[STANDARD_SHADER].setVec("directionalLight.specular", this->directionalLight.specular);
 		
 		// Initialization of point lights
 		this->pointLights.push_back
@@ -197,15 +206,15 @@ namespace Graphics
 			0.0028
 		});	
 
-		this->shader.use();
-		this->shader.setVec("pointLight.position", this->pointLights[0].position);
-		this->shader.setVec("pointLight.color", this->pointLights[0].color);
-		this->shader.setVec("pointLight.ambient", this->pointLights[0].ambient);
-		this->shader.setVec("pointLight.diffuse", this->pointLights[0].diffuse);
-		this->shader.setVec("pointLight.specular", this->pointLights[0].specular);
-		this->shader.setFloat("pointLight.constant", this->pointLights[0].constant);
-		this->shader.setFloat("pointLight.linear", this->pointLights[0].linear);
-		this->shader.setFloat("pointLight.quadratic", this->pointLights[0].quadratic);
+		this->shaders[STANDARD_SHADER].use();
+		this->shaders[STANDARD_SHADER].setVec("pointLight.position", this->pointLights[0].position);
+		this->shaders[STANDARD_SHADER].setVec("pointLight.color", this->pointLights[0].color);
+		this->shaders[STANDARD_SHADER].setVec("pointLight.ambient", this->pointLights[0].ambient);
+		this->shaders[STANDARD_SHADER].setVec("pointLight.diffuse", this->pointLights[0].diffuse);
+		this->shaders[STANDARD_SHADER].setVec("pointLight.specular", this->pointLights[0].specular);
+		this->shaders[STANDARD_SHADER].setFloat("pointLight.constant", this->pointLights[0].constant);
+		this->shaders[STANDARD_SHADER].setFloat("pointLight.linear", this->pointLights[0].linear);
+		this->shaders[STANDARD_SHADER].setFloat("pointLight.quadratic", this->pointLights[0].quadratic);
 
 		//TODO: Iterate through all point light sources
 
@@ -217,16 +226,15 @@ namespace Graphics
 
 	void Game::initObjects()
 	{
+		Model3D* model;
+
+		//models.at(1).Load3DModel("Models/Room/Room.obj", "Models/Room");
+
+
 		Model3D* model = new Model3D();
+		model->Load3DModel("Models/Sphere/Sphere.obj", "Models/Sphere");
+		this->objects.push_back({model, glm::vec3(0.0f, 0.0f, 0.0f}, );
 
-		for (int i = 0; i < 50; i++)
-		{
-			Model3D* model = new Model3D();
-			models.push_back(*model);
-		}
-
-		models.at(0).Load3DModel("Models/Sphere/Sphere.obj", "Models/Sphere");
-		models.at(1).Load3DModel("Models/Room/Room.obj", "Models/Room");
 	}
 
 	void Game::initCamera()
@@ -252,36 +260,36 @@ namespace Graphics
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		this->shader.use();
+		this->shaders[STANDARD_SHADER].use();
 
 		// Model matrix
 		glm::mat4 model = glm::mat4(1.0f);
 		// TODO: Different model matrix for each object
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		this->shader.setMatrix("model", model);
+		this->shaders[STANDARD_SHADER].setMatrix("model", model);
 
 		// Normal matrix
 		glm::mat3 normalModel = glm::mat3(glm::inverseTranspose(model));
-		this->shader.setMatrix("normalModel", normalModel);
+		this->shaders[STANDARD_SHADER].setMatrix("normalModel", normalModel);
 
 		// View matrix
 		glm::mat4 view = glm::mat4(1.0f);
 		view = this->camera.getViewMatrix();
-		this->shader.setMatrix("view", view);
+		this->shaders[STANDARD_SHADER].setMatrix("view", view);
 
 		// Projection matrix
 		glfwGetFramebufferSize(this->window, &this->viewportWidth, &this->viewportHeight);
 
 		glm::mat4 projection = glm::perspective(glm::radians(85.0f), (float) this->viewportWidth / this->viewportHeight, 0.1f, 1000.0f);
-		this->shader.setMatrix("projection", projection);
+		this->shaders[STANDARD_SHADER].setMatrix("projection", projection);
 
 		// Update camera pos
-		this->shader.setVec("viewPos", this->camera.getCameraPosition());
+		this->shaders[STANDARD_SHADER].setVec("viewPos", this->camera.getCameraPosition());
 
 		int modelsSize = this->models.size();
 		for (int i = 0; i < modelsSize; i++)
 		{
-			models.at(i).Draw(this->shader);
+			models.at(i).Draw(this->shaders[STANDARD_SHADER]);
 		}
 
 		// Swap front buffer with back buffer

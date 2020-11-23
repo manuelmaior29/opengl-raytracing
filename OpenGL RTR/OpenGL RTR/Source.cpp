@@ -6,9 +6,6 @@
 #define VIEWPORT_WIDTH 1600
 #define VIEWPORT_HEIGHT 1200
 
-#define STD_VSHADER_PATH "./Shaders/standard_vs.vert"
-#define STD_FSHADER_PATH "./Shaders/standard_fs.frag"
-
 #define APP_NAME "OpenGL"
 
 using namespace Graphics;
@@ -21,9 +18,7 @@ int main()
 			VIEWPORT_WIDTH,
 			VIEWPORT_HEIGHT,
 			3, 
-			3,
-			STD_VSHADER_PATH,
-			STD_FSHADER_PATH
+			3
 			);
 
 	while (!game.windowShouldClose())
@@ -32,8 +27,6 @@ int main()
 		game.processInput();
 		glfwPollEvents();
 	}
-
-	
 
 	return 0;
 }
