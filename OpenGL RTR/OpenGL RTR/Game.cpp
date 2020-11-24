@@ -229,6 +229,7 @@ namespace Graphics
 
 		try
 		{
+			// TODO: Read obj. metadata file from given path
 			std::ifstream objectsDataFile("objects.txt");
 			std::string objectLine;
 			bool headerLine = true;
@@ -247,7 +248,7 @@ namespace Graphics
 
 					sscanf(objectLine.c_str(), "%s %f %f %f %f %f %f %f %f %f %d",
 						modelName, &pX, &pY, &pZ, &rX, &rY, &rZ, &sX, &sY, &sZ, &shaderType);
-					std::cout << modelName << "|" << pX << "|" << pY << "|" << pZ << "|" << rX << "|" << rY << "|" << rZ << "|" << sX << "|" << sY << "|" << sZ << "|" << shaderId << std::endl;
+					std::cout << modelName << "|" << pX << "|" << pY << "|" << pZ << "|" << rX << "|" << rY << "|" << rZ << "|" << sX << "|" << sY << "|" << sZ << "|" << shaderType << std::endl;
 				
 					Model3D* model = new Model3D();
 					std::string modelNameString = std::string(modelName);
