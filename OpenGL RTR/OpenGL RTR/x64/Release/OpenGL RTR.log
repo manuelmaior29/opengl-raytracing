@@ -1,19 +1,9 @@
-﻿  Game.cpp
+﻿  Source.cpp
   The contents of <filesystem> are available only with C++17 or later.
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(25,32): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(26,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(57,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(58,12): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(62,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(63,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(65,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(66,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(78,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(207,4): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Game.cpp(290,39): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\OpenGL RTR\Source.cpp(60,33): warning C4101: 'e': unreferenced local variable
   Generating code
-  4 of 912 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  1 of 186 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    9 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   OpenGL RTR.vcxproj -> C:\Users\hoGGo\Graphics\Bachelor Degree\opengl-raytracing\OpenGL RTR\x64\Release\OpenGL RTR.exe

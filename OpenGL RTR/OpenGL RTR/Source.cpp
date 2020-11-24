@@ -12,6 +12,8 @@ using namespace Graphics;
 
 int main()
 {
+
+	/*
 	Game game(APP_NAME, 
 			WINDOW_WIDTH,
 			WINDOW_HEIGHT, 
@@ -27,6 +29,8 @@ int main()
 		game.processInput();
 		glfwPollEvents();
 	}
+	*/
+
 
 	return 0;
 }

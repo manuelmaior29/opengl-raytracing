@@ -32,10 +32,8 @@ namespace Graphics
 		Model3D model;
 		glm::vec3 position;
 		glm::vec3 rotation;
-		glm::vec3 rotationAxis;
 		glm::vec3 scale;
 		SHADER_TYPE usedShader;
-		std::string path;
 	} Object3D;
 
 	// Light structs

@@ -226,15 +226,48 @@ namespace Graphics
 
 	void Game::initObjects()
 	{
-		Model3D* model;
 
-		//models.at(1).Load3DModel("Models/Room/Room.obj", "Models/Room");
+		try
+		{
+			std::ifstream objectsDataFile("objects.txt");
+			std::string objectLine;
+			bool headerLine = true;
 
+			while (std::getline(objectsDataFile, objectLine))
+			{
+				if (headerLine)
+					headerLine = false;
+				else
+				{
+					char modelName[20];
+					float pX, pY, pZ;
+					float rX, rY, rZ;
+					float sX, sY, sZ;
+					int shaderType;
 
-		Model3D* model = new Model3D();
-		model->Load3DModel("Models/Sphere/Sphere.obj", "Models/Sphere");
-		this->objects.push_back({model, glm::vec3(0.0f, 0.0f, 0.0f}, );
+					sscanf(objectLine.c_str(), "%s %f %f %f %f %f %f %f %f %f %d",
+						modelName, &pX, &pY, &pZ, &rX, &rY, &rZ, &sX, &sY, &sZ, &shaderType);
+					std::cout << modelName << "|" << pX << "|" << pY << "|" << pZ << "|" << rX << "|" << rY << "|" << rZ << "|" << sX << "|" << sY << "|" << sZ << "|" << shaderId << std::endl;
+				
+					Model3D* model = new Model3D();
+					std::string modelNameString = std::string(modelName);
+					model->Load3DModel("Models/" + modelNameString + "/" + modelNameString + ".obj");
 
+					this->objects.push_back
+					({
+						*model,
+						glm::vec3(pX, pY, pZ),
+						glm::vec3(rX, rY, rZ),
+						glm::vec3(sX, sY, sZ),
+						(SHADER_TYPE) shaderType
+					});
+				}
+			}
+		}
+		catch (std::ifstream::failure& e)
+		{
+			std::cout << "ERROR::OBJECTS_DATA_FILE::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+		}
 	}
 
 	void Game::initCamera()
