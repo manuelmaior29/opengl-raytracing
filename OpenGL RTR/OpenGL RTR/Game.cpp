@@ -97,7 +97,6 @@ namespace Graphics
 
 	void Game::processTimePassing()
 	{
-		std::cout << "Time passed\n";
 		/*
 		this->pointLights[0].position.y = 20 * sin(glfwGetTime());
 		this->shader.use();
@@ -168,9 +167,11 @@ namespace Graphics
 		standardShader->loadShader("./Shaders/standard_vs.vert", "./Shaders/standard_fs.frag");
 		this->shaders.push_back(*standardShader);
 
+		/*
 		Shader* lightsourceShader = new Shader();
 		lightsourceShader->loadShader("./Shaders/lightsource_vs.vert", "./Shaders/lighsource_fs.frag");
 		this->shaders.push_back(*lightsourceShader);
+		*/
 	}
 
 	void Game::initLights()
@@ -226,14 +227,13 @@ namespace Graphics
 
 	void Game::initObjects()
 	{
-
 		try
 		{
-			// TODO: Read obj. metadata file from given path
 			std::ifstream objectsDataFile("objects.txt");
 			std::string objectLine;
 			bool headerLine = true;
 
+			// Parsing object metadata file
 			while (std::getline(objectsDataFile, objectLine))
 			{
 				if (headerLine)
@@ -248,20 +248,37 @@ namespace Graphics
 
 					sscanf(objectLine.c_str(), "%s %f %f %f %f %f %f %f %f %f %d",
 						modelName, &pX, &pY, &pZ, &rX, &rY, &rZ, &sX, &sY, &sZ, &shaderType);
-					std::cout << modelName << "|" << pX << "|" << pY << "|" << pZ << "|" << rX << "|" << rY << "|" << rZ << "|" << sX << "|" << sY << "|" << sZ << "|" << shaderType << std::endl;
-				
-					Model3D* model = new Model3D();
-					std::string modelNameString = std::string(modelName);
-					model->Load3DModel("Models/" + modelNameString + "/" + modelNameString + ".obj");
+					std::cout << "Loaded " << modelName << "|" << pX << "|" << pY << "|" << pZ << "|" << rX << "|" << rY << "|" << rZ << "|" << sX << "|" << sY << "|" << sZ << "|" << shaderType << std::endl;
 
-					this->objects.push_back
-					({
-						*model,
+					// Computation of Model matrix
+					glm::mat4 modelMatrix = glm::mat4(1.0f);
+
+					modelMatrix = glm::translate(modelMatrix, glm::vec3(pX, pY, pZ));
+					
+					if (rX != 0)
+						modelMatrix = glm::rotate(modelMatrix, glm::radians(rX), glm::vec3(1.0f, 0.0f, 0.0f));
+					if (rY != 0)
+						modelMatrix = glm::rotate(modelMatrix, glm::radians(rY), glm::vec3(0.0f, 1.0f, 0.0f));
+					if (rZ != 0)
+						modelMatrix = glm::rotate(modelMatrix, glm::radians(rZ), glm::vec3(0.0f, 0.0f, 1.0f));
+					
+					modelMatrix = glm::scale(modelMatrix, glm::vec3(sX, sY, sZ));
+
+					// 3D Object creation
+					Object3D object =
+					{
+						new Model3D(),
 						glm::vec3(pX, pY, pZ),
 						glm::vec3(rX, rY, rZ),
 						glm::vec3(sX, sY, sZ),
-						(SHADER_TYPE) shaderType
-					});
+						modelMatrix,
+						(SHADER_TYPE)shaderType,
+					};
+
+					std::string modelNameString = std::string(modelName);
+					object.model->Load3DModel("Models/" + modelNameString + "/" + modelNameString + ".obj");
+
+					this->objects.push_back(object);
 				}
 			}
 		}
@@ -283,8 +300,6 @@ namespace Graphics
 
 	void Game::processInput()
 	{
-		std::cout << "Position: " << this->camera.getCameraPosition().x << " " << this->camera.getCameraPosition().y << " " << this->camera.getCameraPosition().z;
-		std::cout << "Direction: " << this->camera.getCameraDirection().x << " " << this->camera.getCameraDirection().y << " " << this->camera.getCameraDirection().z;
 		this->processMouseInput();
 		this->processKeyboardInput();
 		this->processTimePassing();
@@ -295,16 +310,6 @@ namespace Graphics
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		this->shaders[STANDARD_SHADER].use();
-
-		// Model matrix
-		glm::mat4 model = glm::mat4(1.0f);
-		// TODO: Different model matrix for each object
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		this->shaders[STANDARD_SHADER].setMatrix("model", model);
-
-		// Normal matrix
-		glm::mat3 normalModel = glm::mat3(glm::inverseTranspose(model));
-		this->shaders[STANDARD_SHADER].setMatrix("normalModel", normalModel);
 
 		// View matrix
 		glm::mat4 view = glm::mat4(1.0f);
@@ -320,10 +325,20 @@ namespace Graphics
 		// Update camera pos
 		this->shaders[STANDARD_SHADER].setVec("viewPos", this->camera.getCameraPosition());
 
-		int modelsSize = this->models.size();
-		for (int i = 0; i < modelsSize; i++)
+		int objectsSize = this->objects.size();
+		for (int i = 0; i < objectsSize; i++)
 		{
-			models.at(i).Draw(this->shaders[STANDARD_SHADER]);
+			this->shaders[STANDARD_SHADER].use();
+
+			// Model matrix
+			this->shaders[STANDARD_SHADER].setMatrix("model", this->objects.at(i).modelMatrix);
+
+			// Normal matrix
+			glm::mat3 normalModel = glm::mat3(glm::inverseTranspose(this->objects.at(i).modelMatrix));
+			this->shaders[STANDARD_SHADER].setMatrix("normalModel", normalModel);
+
+
+			this->objects.at(i).model->Draw(this->shaders[STANDARD_SHADER]);
 		}
 
 		// Swap front buffer with back buffer

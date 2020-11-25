@@ -29,10 +29,11 @@ namespace Graphics
 	// Model structs
 	typedef struct Object3D_
 	{
-		Model3D model;
+		Model3D* model;
 		glm::vec3 position;
 		glm::vec3 rotation;
 		glm::vec3 scale;
+		glm::mat4 modelMatrix;
 		SHADER_TYPE usedShader;
 	} Object3D;
 
@@ -63,7 +64,6 @@ namespace Graphics
 	private:
 
 		std::vector<Object3D> objects;
-		std::vector<Model3D> models;
 
 		DirectionalLight directionalLight;
 		std::vector<PointLight> pointLights;
