@@ -36,23 +36,21 @@ uniform sampler2D texture_diffuse1;
 
 uniform vec3 viewPos;
 
-// Shading variables
-float ambientStrength = 0.1f;
-float specularStrength = 0.5f;
-
 vec4 shadeDirectionalLight()
 {
     // Ambient shading component
-    vec3 ambient = ambientStrength * texture(texture_diffuse1, fTexCoords).rgb * directionalLight.color;
+    vec3 ambient = texture(texture_diffuse1, fTexCoords).rgb * directionalLight.color * directionalLight.ambient;
 
     // Diffuse shading component
     vec3 normal = normalize(fNormal);
-    vec3 diffuse = max(dot(normal, directionalLight.direction), 0.0f) * texture(texture_diffuse1, fTexCoords).rgb * directionalLight.color;
+    float diff = max(dot(normal, directionalLight.direction), 0.0f);
+    vec3 diffuse = diff * texture(texture_diffuse1, fTexCoords).rgb * directionalLight.color * directionalLight.diffuse;
 
     // Specular shading component
     vec3 viewDir = normalize(viewPos - fFragPos);
     vec3 reflectDir = reflect(-directionalLight.direction, normal);
-    vec3 specular = pow(max(dot(viewDir, reflectDir), 0.0f), 32) * specularStrength * directionalLight.color;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32);
+    vec3 specular = spec * directionalLight.color * directionalLight.specular;
 
     return vec4(ambient + diffuse + specular, 1.0f);
 }
@@ -60,17 +58,19 @@ vec4 shadeDirectionalLight()
 vec4 shadePointLights()
 {
     // Ambient shading component
-    vec3 ambient = ambientStrength * texture(texture_diffuse1, fTexCoords).rgb * pointLight.color;
+    vec3 ambient = texture(texture_diffuse1, fTexCoords).rgb * pointLight.color * pointLight.ambient;
 
     // Diffuse shading component
     vec3 normal = normalize(fNormal);
     vec3 lightDir = normalize(pointLight.position - fFragPos);
-    vec3 diffuse = max(dot(normal, lightDir), 0.0f) * texture(texture_diffuse1, fTexCoords).rgb * pointLight.color;
+    float diff = max(dot(normal, lightDir), 0.0f);
+    vec3 diffuse = diff * texture(texture_diffuse1, fTexCoords).rgb * pointLight.color * pointLight.diffuse;
 
     // Specular shading component
     vec3 viewDir = normalize(viewPos - fFragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
-    vec3 specular = pow(max(dot(viewDir, reflectDir), 0.0f), 64) * specularStrength * pointLight.color;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 64);
+    vec3 specular = spec * pointLight.color * pointLight.specular;
 
     float distance = length(pointLight.position - fFragPos);
     float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));
@@ -81,7 +81,7 @@ vec4 shadePointLights()
 void main()
 {
 
-    vec4 directionalColor = shadeDirectionalLight();
+    //vec4 directionalColor = shadeDirectionalLight();
     vec4 pointColor = shadePointLights();
 
     fFragColor = pointColor; //texture(texture_diffuse1, fTexCoords);

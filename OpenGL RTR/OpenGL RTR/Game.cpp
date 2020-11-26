@@ -197,16 +197,17 @@ namespace Graphics
 		// Initialization of point lights
 		this->pointLights.push_back
 		({
-			glm::vec3(glm::vec3(0.0f, 4.0f, 0.0f)),
+			glm::vec3(glm::vec3(0.0f, 10.0f, 0.0f)),
 			glm::vec3(1.0f, 1.0f, 1.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(0.2f, 0.2f, 0.2f),
+			glm::vec3(0.7f, 0.7f, 0.7f),
+			glm::vec3(0.1f, 0.1f, 0.1f),
 			1.0f,
 			0.027,
 			0.0028
 		});	
 
+		//TODO: Iterate through all point light sources
 		this->shaders[STANDARD_SHADER].use();
 		this->shaders[STANDARD_SHADER].setVec("pointLight.position", this->pointLights[0].position);
 		this->shaders[STANDARD_SHADER].setVec("pointLight.color", this->pointLights[0].color);
@@ -217,7 +218,6 @@ namespace Graphics
 		this->shaders[STANDARD_SHADER].setFloat("pointLight.linear", this->pointLights[0].linear);
 		this->shaders[STANDARD_SHADER].setFloat("pointLight.quadratic", this->pointLights[0].quadratic);
 
-		//TODO: Iterate through all point light sources
 
 		/*
 		this->shader.setVec("lightPos", glm::vec3(1, 1, 1));
@@ -292,7 +292,7 @@ namespace Graphics
 	{
 		// TODO: Support for custom initial state (optional)
 		glm::vec3 cameraPos = glm::vec3(5.2f, 2.5f, -4.1f);
-		this->camera.loadCamera(cameraPos, glm::vec3(10.0f, 0.0f, 1.0f), 4.5f);
+		this->camera.loadCamera(cameraPos, glm::vec3(10.0f, 0.0f, 1.0f), 6.0f);
 
 		this->lastFrameTime = 0.0f;
 		this->deltaTime = 0.0f;
