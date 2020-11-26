@@ -33,7 +33,7 @@ namespace Graphics {
 
 	// Draw each mesh from the model
 	void Model3D::Draw(Graphics::Shader shaderProgram)
-	{\
+	{
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shaderProgram);
 	}

@@ -201,7 +201,7 @@ namespace Graphics
 			glm::vec3(1.0f, 1.0f, 1.0f),
 			glm::vec3(0.2f, 0.2f, 0.2f),
 			glm::vec3(0.7f, 0.7f, 0.7f),
-			glm::vec3(0.1f, 0.1f, 0.1f),
+			glm::vec3(0.5f, 0.5f, 0.5f),
 			1.0f,
 			0.027,
 			0.0028
@@ -318,7 +318,6 @@ namespace Graphics
 
 		// Projection matrix
 		glfwGetFramebufferSize(this->window, &this->viewportWidth, &this->viewportHeight);
-
 		glm::mat4 projection = glm::perspective(glm::radians(85.0f), (float) this->viewportWidth / this->viewportHeight, 0.1f, 1000.0f);
 		this->shaders[STANDARD_SHADER].setMatrix("projection", projection);
 
@@ -336,7 +335,6 @@ namespace Graphics
 			// Normal matrix
 			glm::mat3 normalModel = glm::mat3(glm::inverseTranspose(this->objects.at(i).modelMatrix));
 			this->shaders[STANDARD_SHADER].setMatrix("normalModel", normalModel);
-
 
 			this->objects.at(i).model->Draw(this->shaders[STANDARD_SHADER]);
 		}

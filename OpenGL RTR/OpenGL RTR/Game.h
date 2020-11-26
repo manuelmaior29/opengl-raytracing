@@ -88,6 +88,9 @@ namespace Graphics
 		float lastX;
 		float lastY;
 
+		// Test purposes
+
+
 		void initGlfw();
 		int initWindow();
 		void initViewport();

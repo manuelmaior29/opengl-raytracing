@@ -1,10 +1,10 @@
 #include <iostream>
 #include "Game.h"
 
-#define WINDOW_WIDTH 1600
-#define WINDOW_HEIGHT 1200
-#define VIEWPORT_WIDTH 1600
-#define VIEWPORT_HEIGHT 1200
+#define WINDOW_WIDTH 2*1600
+#define WINDOW_HEIGHT 2*1200
+#define VIEWPORT_WIDTH 2*1600
+#define VIEWPORT_HEIGHT 2*1200
 
 #define APP_NAME "OpenGL"
 

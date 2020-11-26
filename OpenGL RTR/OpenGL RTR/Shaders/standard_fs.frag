@@ -30,11 +30,9 @@ struct PointLight_
 
 uniform DirectionalLight_ directionalLight;
 uniform PointLight_ pointLight;
-
 uniform sampler2D texture_diffuse1;
-//uniform sampler2D texture_specular1;
-
 uniform vec3 viewPos;
+uniform bool blinn;
 
 vec4 shadeDirectionalLight()
 {
@@ -68,8 +66,9 @@ vec4 shadePointLights()
 
     // Specular shading component
     vec3 viewDir = normalize(viewPos - fFragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 64);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(viewDir, halfwayDir), 0.0f), 128);
+
     vec3 specular = spec * pointLight.color * pointLight.specular;
 
     float distance = length(pointLight.position - fFragPos);
